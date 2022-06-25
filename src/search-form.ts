@@ -76,12 +76,14 @@ function getSearchFormData(e: Event): void {
     maxPrice: ''
   }
 
-  const searchFormData: any {
-    'city': string,
-    'coordinates': [number, number],
+  
+
+  const searchFormData: any = {
+    'city': ' ',
+    'coordinates': [],
     'check-in-date': Date,
     'check-out-date': Date,
-    'max-price': number,
+    'max-price': '',
   }
 
 }

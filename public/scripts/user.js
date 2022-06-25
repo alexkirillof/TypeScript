@@ -1,12 +1,14 @@
 import { renderBlock } from './lib.js';
-export function renderUserBlock(userName, avatarLink, favoriteItemsAmount) {
-    const favoritesCaption = favoriteItemsAmount ? favoriteItemsAmount : 'ничего нет';
-    const hasFavoriteItems = favoriteItemsAmount ? true : false;
+export function renderUserBlock() {
+    const userData = getUserData();
+    const favoritesAmount = getFavoritesAmount();
+    const favoritesCaption = favoritesAmount ? favoritesAmount : 'ничего нет';
+    const hasFavoriteItems = favoritesAmount ? true : false;
     renderBlock('user-block', `
     <div class="header-container">
-      <img class="avatar" src="${avatarLink}" alt="Wade Warren" />
+      <img class="avatar" src="${userData.avatarUrl}" alt="Wade Warren" />
       <div class="info">
-          <p class="name">${userName}</p>
+          <p class="name">${userData.username}</p>
           <p class="fav">
             <i class="heart-icon${hasFavoriteItems ? ' active' : ''}"></i>${favoritesCaption}
           </p>
@@ -14,7 +16,8 @@ export function renderUserBlock(userName, avatarLink, favoriteItemsAmount) {
     </div>
     `);
 }
-export function getUserData(user) {
+export function getUserData() {
+    const user = JSON.parse(localStorage.getItem('user'));
     const emptyUser = {
         username: 'unknown',
         avatarUrl: '/img/empty.png'
@@ -30,13 +33,25 @@ export function getUserData(user) {
     Object.hasOwn(user, 'avatarUrl') && user['avatarUrl'] ? result.avatarUrl = user['avatarUrl'] : result.avatarUrl = emptyUser.avatarUrl;
     return result;
 }
-export function getFavoritesAmount(user) {
-    if (typeof user !== 'object' || !user) {
-        return 0;
+export function getFavoritesAmount() {
+    const favoriteItems = getFavorites();
+    return favoriteItems.length;
+}
+function getFavorites() {
+    const favoriteItems = JSON.parse(localStorage.getItem('favoriteItems'));
+    if (!Array.isArray(favoriteItems) || favoriteItems.length === 0) {
+        return [];
     }
-    if (!Object.hasOwn(user, 'favoritesAmount') || !user['favoritesAmount'].length) {
-        return 0;
-    }
-    const result = parseInt(user['favoritesAmount']);
-    return isNaN(result) ? 0 : result;
+    return favoriteItems;
+}
+export function toggleFavorites(favPlace) {
+    const favoriteItems = getFavorites();
+    const filtredFavorites = favoriteItems.filter((fav) => fav.id !== favPlace.id);
+    filtredFavorites.length === favoriteItems.length ?
+        localStorage.setItem('favoriteItems', JSON.stringify([...favoriteItems, favPlace])) :
+        localStorage.setItem('favoriteItems', JSON.stringify(filtredFavorites));
+}
+export function isFavorite(placeId) {
+    const favoriteItems = getFavorites();
+    return favoriteItems.find((fav) => fav.id === placeId) ? true : false;
 }

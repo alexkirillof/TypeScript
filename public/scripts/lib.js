@@ -23,3 +23,22 @@ export function renderToast(message, action) {
         };
     }
 }
+const API_URL = 'http://127.0.0.1:3001';
+export async function fetchHomeApi(requestParams) {
+    if (requestParams.method === 'GET') {
+        const fetchURL = API_URL + requestParams.endPoint + serializeToGetParams(requestParams.parameters);
+        const response = await fetch(fetchURL);
+        return await response.json();
+    }
+    else {
+        const fetchURL = API_URL + requestParams.endPoint;
+        const response = await fetch(fetchURL, {
+            method: requestParams.method,
+            body: JSON.stringify(requestParams.parameters)
+        });
+        return await response.json();
+    }
+}
+export function serializeToGetParams(params) {
+    return '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
+}

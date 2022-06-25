@@ -62,10 +62,10 @@ function getSearchFormData(e) {
         maxPrice: ''
     };
     const searchFormData = {
-        'city': '',
+        'city': ' ',
         'coordinates': [],
-        'check-in-date': '',
-        'check-out-date': '',
-        'max-price': ''
+        'check-in-date': Date,
+        'check-out-date': Date,
+        'max-price': '',
     };
 }
