@@ -1,27 +1,17 @@
-import { renderBlock } from './lib.js'
-import {  ISearchFormData } from './interfaces.js';
-
+import { renderBlock } from './lib.js';
 const TwoDays_Month = 2;
 const OneMonth = 1;
-
-
-function getStringFromDate(date: Date): string {
-  return date.getFullYear() + '-' + (date.getMonth() + OneMonth).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0');
+function getStringFromDate(date) {
+    return date.getFullYear() + '-' + (date.getMonth() + OneMonth).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0');
 }
-const getDateFromString = (date: string): Date => 
-  new Date(+date.split('-')[0], +date.split('-')[1], +date.split('-')[2]);
-
-const minDate: Date = new Date();
-const maxDate: Date = new Date(minDate.getFullYear(), minDate.getMonth() + OneMonth, (new Date(minDate.getFullYear(), minDate.getMonth() + 2, 0)).getDate());
-const minCheckoutDate: Date = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate() + TwoDays_Month);
-
-export function renderSearchFormBlock(dateStart: string = getStringFromDate(minDate), dateEnd: string = getStringFromDate(minCheckoutDate)) {
-  const dateStartFromString = getDateFromString(dateStart);
-  const dateEndFromString = getDateFromString(dateEnd);
-
-  renderBlock(
-    'search-form-block',
-    `
+const getDateFromString = (date) => new Date(+date.split('-')[0], +date.split('-')[1], +date.split('-')[2]);
+const minDate = new Date();
+const maxDate = new Date(minDate.getFullYear(), minDate.getMonth() + OneMonth, (new Date(minDate.getFullYear(), minDate.getMonth() + 2, 0)).getDate());
+const minCheckoutDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate() + TwoDays_Month);
+export function renderSearchFormBlock(dateStart = getStringFromDate(minDate), dateEnd = getStringFromDate(minCheckoutDate)) {
+    const dateStartFromString = getDateFromString(dateStart);
+    const dateEndFromString = getDateFromString(dateEnd);
+    renderBlock('search-form-block', `
     <form>
       <fieldset class="search-filedset">
         <div class="row">
@@ -58,33 +48,24 @@ export function renderSearchFormBlock(dateStart: string = getStringFromDate(minD
         </div>
       </fieldset>
     </form>
-    `
-  )
-  document.querySelector('form#searchForm').addEventListener('submit', getSearchFormData)
+    `);
+    document.querySelector('form#searchForm').addEventListener('submit', getSearchFormData);
 }
-
-function getSearchFormData(e: Event): void { 
-  e.preventDefault();
-
-  const form = new FormData(document.querySelector('form#searchForm'))
-
-  const formValues = {
-    city: '',
-    coordinates: [],
-    checkInDate: '',
-    checkOutDate: '',
-    maxPrice: ''
-  }
-
-  
-
-  const searchFormData: any = {
-    'city': ' ',
-    'coordinates': [],
-    'check-in-date': Date,
-    'check-out-date': Date,
-    'max-price': '',
-  }
-
+function getSearchFormData(e) {
+    e.preventDefault();
+    const form = new FormData(document.querySelector('form#searchForm'));
+    const formValues = {
+        city: '',
+        coordinates: [],
+        checkInDate: '',
+        checkOutDate: '',
+        maxPrice: ''
+    };
+    const searchFormData = {
+        'city': ' ',
+        'coordinates': [],
+        'check-in-date': Date,
+        'check-out-date': Date,
+        'max-price': '',
+    };
 }
-
