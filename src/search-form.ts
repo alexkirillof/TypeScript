@@ -1,5 +1,6 @@
-import { renderBlock } from './lib.js'
-import {  ISearchFormData } from './interfaces.js';
+import { fetchHomeApi, renderBlock } from './lib.js'
+import { IFindPlacesParams, IPlaces } from './interfaces.js'
+import { renderSearchResultsBlock } from './search-results.js'
 
 const TwoDays_Month = 2;
 const OneMonth = 1;
@@ -68,23 +69,25 @@ function getSearchFormData(e: Event): void {
 
   const form = new FormData(document.querySelector('form#searchForm'))
 
-  const formValues = {
-    city: '',
-    coordinates: [],
-    checkInDate: '',
-    checkOutDate: '',
-    maxPrice: ''
+  const searchFormData: IFindPlacesParams = {
+    city: form.get('city').toString(),
+    coordinates: form.get('coordinates').toString(),
+    checkInDate: getDateFromString(form.get('check-in-date').toString()).getTime(),
+    checkOutDate: getDateFromString(form.get('check-out-date').toString()).getTime(),
   }
 
+  const formPrice = parseInt(form.get('price').toString());
+
+  isNaN(formPrice) || formPrice < 1 ? null : searchFormData.maxPrice = formPrice
+
+  const homy = form.getAll('provider').indexOf('homy') !== -1 ? true : false
+  const flatRent = form.getAll('provider').indexOf('flat-rent') !== -1 ? true : false
   
-
-  const searchFormData: any = {
-    'city': ' ',
-    'coordinates': [],
-    'check-in-date': Date,
-    'check-out-date': Date,
-    'max-price': '',
-  }
-
+  search(searchFormData, renderSearchResultsBlock, homy, flatRent)
 }
 
+export function search(params: IFindPlacesParams, render: (places: IPlaces[] | Record<string, string> | Error) => void, homy: boolean, flatRent: boolean): void { 
+  let allPlaces: IPlaces[] = [];
+
+
+}
