@@ -1,10 +1,20 @@
-import { renderBlock } from './lib.js'
-const getStringFromDate = (date: Date): string => date.getFullYear() + '-' + (date.getMonth()+ 1).toString().padStart(2,'0') + '-' + date.getDate().toString().padStart(2,'0');
-const getDateFromString = (date: string): Date => new Date(+date.split('-')[0], +date.split('-')[1], +date.split('-')[2]);
+import { fetchHomeApi, renderBlock } from './lib.js'
+import { IFindPlacesParams, IPlaces } from './interfaces.js'
+import { renderSearchResultsBlock } from './search-results.js'
+
+const TwoDays_Month = 2;
+const OneMonth = 1;
+
+
+function getStringFromDate(date: Date): string {
+  return date.getFullYear() + '-' + (date.getMonth() + OneMonth).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0');
+}
+const getDateFromString = (date: string): Date => 
+  new Date(+date.split('-')[0], +date.split('-')[1], +date.split('-')[2]);
 
 const minDate: Date = new Date();
-const maxDate: Date = new Date(minDate.getFullYear(), minDate.getMonth() + 1, (new Date(minDate.getFullYear(), minDate.getMonth() + 2, 0)).getDate());
-const minCheckoutDate: Date = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate() + 2);
+const maxDate: Date = new Date(minDate.getFullYear(), minDate.getMonth() + OneMonth, (new Date(minDate.getFullYear(), minDate.getMonth() + 2, 0)).getDate());
+const minCheckoutDate: Date = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate() + TwoDays_Month);
 
 export function renderSearchFormBlock(dateStart: string = getStringFromDate(minDate), dateEnd: string = getStringFromDate(minCheckoutDate)) {
   const dateStartFromString = getDateFromString(dateStart);
@@ -29,11 +39,15 @@ export function renderSearchFormBlock(dateStart: string = getStringFromDate(minD
         <div class="row">
           <div>
             <label for="check-in-date">Дата заезда</label>
-            <input id="check-in-date" type="date" value="${dateStartFromString >= minDate ? dateStart : getStringFromDate(minDate)}" min="${getStringFromDate(minDate)}" max="${getStringFromDate(maxDate)}" name="checkin" />
+            <input id="check-in-date" type="date" value="${dateStartFromString >= minDate ? dateStart : getStringFromDate(minDate)}" 
+            min="${getStringFromDate(minDate)}" 
+            max="${getStringFromDate(maxDate)}" name="checkin" />
           </div>
           <div>
             <label for="check-out-date">Дата выезда</label>
-            <input id="check-out-date" type="date" value="${dateEndFromString <= maxDate ? dateEnd : getStringFromDate(maxDate)}" min="${getStringFromDate(minCheckoutDate)}" max="${getStringFromDate(maxDate)}" name="checkout" />
+            <input id="check-out-date" type="date" value="${dateEndFromString <= maxDate ? dateEnd : getStringFromDate(maxDate)}" 
+            min="${getStringFromDate(minCheckoutDate)}" 
+            max="${getStringFromDate(maxDate)}" name="checkout" />
           </div>
           <div>
             <label for="max-price">Макс. цена суток</label>
@@ -47,4 +61,33 @@ export function renderSearchFormBlock(dateStart: string = getStringFromDate(minD
     </form>
     `
   )
+  document.querySelector('form#searchForm').addEventListener('submit', getSearchFormData)
+}
+
+function getSearchFormData(e: Event): void { 
+  e.preventDefault();
+
+  const form = new FormData(document.querySelector('form#searchForm'))
+
+  const searchFormData: IFindPlacesParams = {
+    city: form.get('city').toString(),
+    coordinates: form.get('coordinates').toString(),
+    checkInDate: getDateFromString(form.get('check-in-date').toString()).getTime(),
+    checkOutDate: getDateFromString(form.get('check-out-date').toString()).getTime(),
+  }
+
+  const formPrice = parseInt(form.get('price').toString());
+
+  isNaN(formPrice) || formPrice < 1 ? null : searchFormData.maxPrice = formPrice
+
+  const homy = form.getAll('provider').indexOf('homy') !== -1 ? true : false
+  const flatRent = form.getAll('provider').indexOf('flat-rent') !== -1 ? true : false
+  
+  search(searchFormData, renderSearchResultsBlock, homy, flatRent)
+}
+
+export function search(params: IFindPlacesParams, render: (places: IPlaces[] | Record<string, string> | Error) => void, homy: boolean, flatRent: boolean): void { 
+  let allPlaces: IPlaces[] = [];
+
+
 }
