@@ -1,7 +1,7 @@
 const database = [{
         id: 'ab1',
         title: 'Hotel_1',
-        details: 'Отель_1',
+        details: 'Отель_1 описание',
         photos: ['ab1.png', 'ab1.png'],
         coordinates: [123],
         bookedDates: [],
