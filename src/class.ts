@@ -1,6 +1,6 @@
-import { FlatRentSdk, IFindFlatParams } from './flat-rent-sdk';
-import { IFindPlacesParams, IPlaces } from './interfaces';
 import { fetchHomeApi } from './lib';
+import { FlatRentSdk, IFindFlatParams } from './rent-sdk';
+import { IFindPlacesParams, IPlaces } from './interfaces';
 
 export class Places { 
   private places:IPlaces[]

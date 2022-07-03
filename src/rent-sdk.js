@@ -1,39 +1,31 @@
 const database = [{
-        id: 'vnd331',
-        title: 'Radisson Royal Hotel',
-        details: 'Отель расположен в 4 минутах ходьбы от станции метро «Маяковская». К услугам гостей фитнес-центр и спа-центр с сауной и гидромассажной ванной.',
-        photos: ['vnd331.png', 'vnd331.png'],
-        coordinates: [59.9322936, 30.3460129],
+        id: 'ab1',
+        title: 'Hotel_1',
+        details: 'Отель_1',
+        photos: ['ab1.png', 'ab1.png'],
+        coordinates: [123],
         bookedDates: [],
-        price: 12000
+        price: 5000
     },
     {
-        id: 'ab2e2',
-        title: 'Номера на Садовой',
-        details: 'Расположен в 7 минутах ходьбы от Невского проспекта. К услугам гостей круглосуточная стойка регистрации и бесплатный Wi-Fi.',
-        photos: ['ab2e2.png', 'ab2e2.png'],
-        coordinates: [59.930325, 30.3291592],
+        id: 'ab2.jpg',
+        title: 'Hotel_2',
+        details: 'Отель_2',
+        photos: ['ab2.png', 'ab2.png'],
+        coordinates: [345],
         bookedDates: [],
-        price: 4500
+        price: 6000
     },
     {
-        id: 'mvm32l',
-        title: 'Мини Отель на Невском 136',
-        details: 'Мини-отель расположен в Санкт-Петербурге, в 5 минутах ходьбы от станции метро «Площадь Восстания» и Московского железнодорожного вокзала.',
-        photos: ['mvm32l.png', 'mvm32l.png'],
-        coordinates: [59.9299603, 30.3658932],
+        id: 'ab3.jpg',
+        title: 'Hotel_3',
+        details: 'Отель_3',
+        photos: ['ab3.png', 'ab3.png'],
+        coordinates: [678],
         bookedDates: [],
-        price: 3800
+        price: 7000
     },
-    {
-        id: 'bvep12',
-        title: 'Отель Усадьба Державина',
-        details: 'Прекрасный отель недалеко от Исаакиевского собора с бесплатным Wi-Fi на всей территории.',
-        photos: ['bvep12.png', 'bvep12.png'],
-        coordinates: [59.9194966, 30.309389],
-        bookedDates: [],
-        price: 8700
-    }
+
 ]
 
 export function cloneDate(date) {
@@ -45,7 +37,7 @@ export function addDays(date, days) {
     return date
 }
 
-export const backendPort = 3000
+export const backendPort = 3001
 export const localStorageKey = 'flat-rent-db'
 
 export class FlatRentSdk {

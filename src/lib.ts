@@ -1,4 +1,4 @@
-import { IBookPlaceParams, IFindPlacesParams, IGetPlaceParams, IPlaces, IRequestParams } from './interfaces.js'
+import { IPlaces, IRequestParams } from './interfaces.js'
 
 export function renderBlock (elementId, html) {
   const element = document.getElementById(elementId)
