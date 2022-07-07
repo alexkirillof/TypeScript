@@ -1,4 +1,4 @@
-import { Places } from './class.js'
+import { FindPlaces } from './class.js'
 import { IPlaces } from './interfaces.js'
 import { renderBlock } from './lib.js'
 import { isFavorite, renderUserBlock, toggleFavorites } from './user.js'
@@ -15,7 +15,7 @@ export function renderSearchStubBlock () {
   )
 }
 
-export function renderEmptyOrErrorSearchBlock (reasonMessage) {
+export function renderEmptyOrErrorSearchBlock (reasonMessage: string) {
   renderBlock(
     'search-results-block',
     `
@@ -27,8 +27,8 @@ export function renderEmptyOrErrorSearchBlock (reasonMessage) {
   )
 }
 
-export function renderSearchResultsBlock(places: Places): void {
-  if (places.getPlaces().length === 0) { 
+export function renderSearchResultsBlock(places: IPlaces[]): void {
+  if (places.length === 0) { 
     renderEmptyOrErrorSearchBlock('Ничего не нашлось =(');
   } else { 
     let html = `<div class="search-results-header">
@@ -51,9 +51,9 @@ export function renderSearchResultsBlock(places: Places): void {
       html
     )
 
-    renderResultList(places.getPlaces())
+    renderResultList(places)
 
-    document.querySelector('#searchSort').addEventListener('change', (e) => sortResults(e.target, places))
+    document.querySelector('#searchSort')?.addEventListener('change', (e) => sortResults(e.target, places))
   }
 }
 
@@ -94,19 +94,15 @@ function renderResultList(places: IPlaces[]): void {
 
 function toggleFavoriteItem(e: Event): void {
   if (e.target instanceof HTMLDivElement) {
+    const id = e.target.id
+    const image = e.target.nextElementSibling instanceof HTMLImageElement ? e.target.nextElementSibling.src : ''
+    const name = e.target.closest('.result')?.querySelector('.result-info--name')?.textContent
+
     const place: Pick<IPlaces, 'id' | 'image' | 'name'> = {
-      id: null,
-      image: null,
-      name: null
+      id: id,
+      image: image,
+      name: name ? name : ''
     }
-
-    place.id = e.target.id
-
-    if (e.target.nextElementSibling instanceof HTMLImageElement) {
-      place.image = e.target.nextElementSibling.src
-    }
-
-    place.name = e.target.closest('.result').querySelector('.result-info--name').textContent
 
     toggleFavorites(place)
 
@@ -116,8 +112,13 @@ function toggleFavoriteItem(e: Event): void {
   }
 }
 
-function sortResults(select: EventTarget, places: Places): void { 
+function sortResults(select: EventTarget | null, places: IPlaces[]): void { 
   if (select instanceof HTMLSelectElement) {
-    console.log(places); 
+    if (select.value !== '') {
+      const [orderBy, orderType] = select.value.split('_')
+      if ((orderBy == 'price' || orderBy == 'remoteness') && (orderType == 'ASC' || orderType == 'DESC')) {
+        renderResultList(FindPlaces.sortPlaces(places, orderBy, orderType))
+      }
+    } 
   }
 }
