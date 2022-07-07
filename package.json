@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
+    "types": "./public/scripts/types/index.d.ts",
     "scripts": {
         "build": "tsc",
         "build:dev": "del public/scripts && tsc -p tsconfig-dev.json",
